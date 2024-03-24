@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+"""Defines the HBnB console."""
 import cmd
 import re
 from shlex import split
@@ -9,6 +11,7 @@ from models.city import City
 from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
+
 
 def parse(arg):
     curly_braces = re.search(r"\{(.*?)\}", arg)
@@ -26,6 +29,7 @@ def parse(arg):
         retl = [i.strip(",") for i in lexer]
         retl.append(curly_braces.group())
         return retl
+
 
 class HBNBCommand(cmd.Cmd):
     """Defines the HolbertonBnB command interpreter.
@@ -126,42 +130,57 @@ class HBNBCommand(cmd.Cmd):
             del objdict["{}.{}".format(argl[0], argl[1])]
 
     def do_all(self, arg):
-        """Usage: all <class> or <class>.all()
-        Display string representation of all instances of a class.
-        """
+        """Usage: all or all <class>
+        Prints all string representation of all instances based or not
+        on the class name."""
         objdict = storage.all()
         argl = parse(arg)
         if len(argl) == 0:
-            print([str(v) for k, v in objdict.items()])
+            print([str(obj) for obj in objdict.values()])
         elif argl[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
-            print([str(v) for k, v in objdict.items() if argl[0] in k])
+            print([str(obj) for key, obj in objdict.items()
+                   if type(obj).__name__ == argl[0]])
 
     def do_count(self, arg):
         """Usage: <class name>.count()
-        Retrieve the number of instances of a class.
-        """
+        Retrieve the number of instances of a class."""
         objdict = storage.all()
         argl = parse(arg)
         if len(argl) == 0:
-            print(len(objdict))
+            print("** class name missing **")
         elif argl[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
-            count = 0
-            for k in objdict.keys():
-                if argl[0] in k:
-                    count += 1
+            count = sum(1 for obj in objdict.values()
+                        if type(obj).__name__ == argl[0])
             print(count)
 
     def do_update(self, arg):
-        """Usage: <class name>.update(<id>, <attribute name>, <attribute value>)
-        Update an instance based on its ID.
-        """
-        objdict = storage.all()
+        """Usage: update <class name> <id> <attribute name> "<attribute value>"
+        Updates an instance based on the class name and id
+        by adding or updating attribute."""
         argl = parse(arg)
-        if len(argl) < 2:
-            print("** instance id missing **")
+        objdict = storage.all()
+        if len(argl) == 0:
+            print("** class name missing **")
         elif argl[0] not in HBNBCommand.__classes:
-            print
+            print("** class doesn't exist **")
+        elif len(argl) == 1:
+            print("** instance id missing **")
+        elif "{}.{}".format(argl[0], argl[1]) not in objdict.keys():
+            print("** no instance found **")
+        elif len(argl) == 2:
+            print("** attribute name missing **")
+        elif len(argl) == 3:
+            print("** value missing **")
+        else:
+            key = "{}.{}".format(argl[0], argl[1])
+            obj = objdict[key]
+            setattr(obj, argl[2], argl[3].strip('"'))
+            storage.save()
+
+
+if __name__ == '__main__':
+    HBNBCommand().cmdloop()
