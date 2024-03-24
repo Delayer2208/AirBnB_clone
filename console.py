@@ -49,5 +49,6 @@ class MyCustomFileStorage:
 
 
                                                                                                                                                                                                                                                                                                                                 if __name__ == "__main__":
-                                                                                                                                                                                                                                                                                                                                        pass  # Add your console code here if needed
+                                                                                                                                                                                                                                                                                                                                        storage = MyCustomFileStorage()
+                                                                                                                                                                                                                                                                                                                                            # Add your console code here if needed
 
