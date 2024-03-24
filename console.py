@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-"""Defines the HBnB console."""
 import cmd
 import re
 from shlex import split
@@ -11,7 +9,6 @@ from models.city import City
 from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
-
 
 def parse(arg):
     curly_braces = re.search(r"\{(.*?)\}", arg)
@@ -29,7 +26,6 @@ def parse(arg):
         retl = [i.strip(",") for i in lexer]
         retl.append(curly_braces.group())
         return retl
-
 
 class HBNBCommand(cmd.Cmd):
     """Defines the HolbertonBnB command interpreter.
@@ -93,9 +89,8 @@ class HBNBCommand(cmd.Cmd):
         elif argl[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
-            obj = eval(argl[0])()
-            obj.save()
-            print(obj.id)
+            print(eval(argl[0])().id)
+            storage.save()
 
     def do_show(self, arg):
         """Usage: show <class> <id> or <class>.show(<id>)
@@ -129,13 +124,44 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
         else:
             del objdict["{}.{}".format(argl[0], argl[1])]
-            storage.save()
 
     def do_all(self, arg):
-        """Usage: all or all <class>
-        Display string representations of all instances or of a specific class.
+        """Usage: all <class> or <class>.all()
+        Display string representation of all instances of a class.
         """
-        argl = parse(arg)
         objdict = storage.all()
+        argl = parse(arg)
         if len(argl) == 0:
-            print([str(obj) for obj in objdict.values()])
+            print([str(v) for k, v in objdict.items()])
+        elif argl[0] not in HBNBCommand.__classes:
+            print("** class doesn't exist **")
+        else:
+            print([str(v) for k, v in objdict.items() if argl[0] in k])
+
+    def do_count(self, arg):
+        """Usage: <class name>.count()
+        Retrieve the number of instances of a class.
+        """
+        objdict = storage.all()
+        argl = parse(arg)
+        if len(argl) == 0:
+            print(len(objdict))
+        elif argl[0] not in HBNBCommand.__classes:
+            print("** class doesn't exist **")
+        else:
+            count = 0
+            for k in objdict.keys():
+                if argl[0] in k:
+                    count += 1
+            print(count)
+
+    def do_update(self, arg):
+        """Usage: <class name>.update(<id>, <attribute name>, <attribute value>)
+        Update an instance based on its ID.
+        """
+        objdict = storage.all()
+        argl = parse(arg)
+        if len(argl) < 2:
+            print("** instance id missing **")
+        elif argl[0] not in HBNBCommand.__classes:
+            print
