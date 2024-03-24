@@ -1,9 +1,9 @@
 #!/usr/bin/python3
-"""Defines the Place class."""
-from models.base_model import Base
+"""Defines the PlaceModel class."""
+from models.base_model import BaseModel
 
 
-class PlaceModel(Base):
+class PlaceModel(BaseModel):
         """Represent a place.
 
             Attributes:

@@ -1,9 +1,9 @@
 #!/usr/bin/python3
-"""Defines the Review class."""
-from models.base_model import Base
+"""Defines the ReviewModel class."""
+from models.base_model import BaseModel
 
 
-class ReviewModel(Base):
+class ReviewModel(BaseModel):
         """Represent a review.
 
             Attributes:
