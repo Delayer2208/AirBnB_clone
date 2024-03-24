@@ -1,9 +1,9 @@
 #!/usr/bin/python3
-"""Defines the CityModel class."""
-from models.base_model import BaseModel
+"""Defines the City class."""
+from models.base_model import Base
 
 
-class CityModel(BaseModel):
+class CityModel(Base):
         """Represent a city.
 
             Attributes:
