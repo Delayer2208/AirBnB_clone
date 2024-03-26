@@ -171,4 +171,21 @@ class TestUserToDict(unittest.TestCase):
     def test_to_dict_output(self):
         dt = datetime.today()
         user = User()
-        user.id = "
+        user.id = "test_id"
+        user.created_at = dt
+        user.updated_at = dt
+        user.middle_name = "Holberton"
+        user.my_number = 98
+
+        user_dict = user.to_dict()
+
+        self.assertEqual(user_dict['id'], "test_id")
+        self.assertEqual(user_dict['created_at'], dt.strftime('%Y-%m-%d %H:%M:%S'))
+        self.assertEqual(user_dict['updated_at'], dt.strftime('%Y-%m-%d %H:%M:%S'))
+        self.assertEqual(user_dict['__class__'], 'User')
+        self.assertEqual(user_dict['middle_name'], "Holberton")
+        self.assertEqual(user_dict['my_number'], 98)
+
+
+if __name__ == '__main__':
+    unittest.main()
